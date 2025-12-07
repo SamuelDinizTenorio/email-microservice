@@ -1,0 +1,45 @@
+# Configurações gerais da aplicação Spring Boot
+spring:
+  application:
+    name: email-service
+  # Configuração do e-mail de origem (remetente)
+  # Utilizado para identificar o remetente no serviço de e-mail.
+  mail:
+    username: ${EMAIL_USERNAME}
+
+# Configurações do servidor web embutido (Tomcat)
+server:
+  # Configurações de como os erros são exibidos nas respostas HTTP
+  error:
+    # Não inclui o nome da classe da exceção na resposta de erro.
+    include-exception: false
+    # Nunca inclui o stack trace na resposta. Essencial para segurança em produção.
+    include-stacktrace: never
+    # Nunca inclui a mensagem da exceção na resposta padrão do Spring.
+    # Permite que o GlobalExceptionHandler tenha controle total sobre a mensagem de erro.
+    include-message: never
+
+# Configurações de logging
+logging:
+  file:
+    # Caminho e nome do arquivo de log. Será criado na pasta 'logs' na raiz do projeto.
+    name: ./logs/email-service.log
+  logback:
+    rollingpolicy:
+      # Tamanho máximo de cada arquivo de log antes de ser rotacionado.
+      max-file-size: 10MB
+      # Número máximo de arquivos de log antigos a serem mantidos.
+      max-history: 3
+      # Nome do padrão para os arquivos de log arquivados.
+      file-name-pattern: ./logs/email-service-%d{yyyy-MM-dd}.%i.log
+
+# Configurações de credenciais da AWS
+# Estes valores devem ser fornecidos através de variáveis de ambiente ou
+# em um arquivo de perfil específico (ex: application-dev.yaml) que não é versionado.
+aws:
+  # Chave de acesso da AWS para autenticação programática.
+  accessKeyId: ${AWS_ACCESS_KEY_ID}
+  # Chave secreta da AWS para autenticação programática.
+  secretKey: ${AWS_SECRET_ACCESS_KEY}
+  # Região da AWS onde o serviço (ex: SES) está localizado.
+  region: ${AWS_REGION}

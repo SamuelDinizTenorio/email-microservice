@@ -1,0 +1,60 @@
+# Nome do workflow que aparecerá na aba "Actions" do GitHub.
+name: CI - Build, Test and Security Analysis
+
+# Define os gatilhos (triggers) que iniciam o workflow.
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+# Concede as permissões necessárias para o job.
+# O CodeQL precisa de permissão para escrever os resultados na aba "Security".
+permissions:
+  contents: read # Necessário para a action de checkout.
+  security-events: write # Necessário para a action do CodeQL.
+  checks: write # Opcional, mas bom para relatar status.
+  actions: read # Opcional, para ler informações sobre outras actions.
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Baixa o seu código do repositório para a máquina virtual.
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # 2. Configura o ambiente Java com a versão correta (JDK 21).
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+          cache: 'maven'
+
+      # 3. Inicializa o CodeQL para análise de segurança.
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v4
+        with:
+          languages: java
+
+      # 4. Executa os testes usando o Maven.
+      # As variáveis de ambiente são injetadas a partir dos GitHub Secrets.
+      - name: Run tests with Maven
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: ${{ secrets.AWS_REGION }}
+          EMAIL_USERNAME: ${{ secrets.EMAIL_USERNAME }}
+        run: mvn -B test
+
+      # 5. Constrói o projeto (cria o .jar) se os testes passarem.
+      - name: Build project with Maven
+        run: mvn -B package -DskipTests
+
+      # 6. Finaliza a análise do CodeQL.
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v4

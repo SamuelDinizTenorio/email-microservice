@@ -1,5 +1,7 @@
 # Email Service
 
+[![CI - Build, Test and Security Analysis](https://github.com/SamuelDinizTenorio/EMAIL-SERVICE/actions/workflows/ci.yml/badge.svg)](https://github.com/SamuelDinizTenorio/EMAIL-SERVICE/actions/workflows/ci.yml)
+
 Este é um microserviço de exemplo construído com Spring Boot, projetado para enviar e-mails de forma desacoplada e robusta. A aplicação utiliza o Amazon Simple Email Service (SES) como provedor de e-mail e segue princípios de Arquitetura Limpa (Clean Architecture) para uma clara separação de responsabilidades.
 
 ## Funcionalidades
@@ -22,6 +24,17 @@ O projeto é estruturado seguindo os princípios da Arquitetura Limpa/Hexagonal,
 - **`infra`**: Contém as implementações concretas (adaptadores de saída) para as portas definidas em `adapters`. Ex: `AwsSesEmailSender`.
 - **`controllers`**: Contém os adaptadores de entrada que expõem a funcionalidade da aplicação via API REST.
 - **`dto`**: Data Transfer Objects usados para a comunicação entre as camadas e na API.
+
+## CI/CD Pipeline
+
+Este projeto utiliza GitHub Actions para integração contínua. O pipeline, definido em `.github/workflows/ci.yml`, é acionado a cada `push` ou `pull request` para a branch `main`.
+
+O pipeline executa os seguintes passos:
+
+1.  **Build e Teste:** Compila o código e executa todos os testes de unidade e integração usando Maven.
+2.  **Análise de Segurança:** Utiliza o GitHub CodeQL para escanear o código em busca de vulnerabilidades de segurança conhecidas.
+
+Um build bem-sucedido garante que o projeto está compilando, que os testes estão passando e que nenhuma nova vulnerabilidade de segurança foi introduzida.
 
 ## Tecnologias Utilizadas
 

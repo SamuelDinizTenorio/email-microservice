@@ -1,0 +1,29 @@
+services:
+  email-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: email-service:latest
+    container_name: email-service-app
+    ports:
+      - "8080:8080"
+    
+    # Carrega as variáveis de ambiente de um arquivo .env no mesmo diretorio
+    env_file:
+      - .env
+
+    # Define limites de recursos para o container
+    deploy:
+      resources:
+        limits:
+          cpus: '0.75'  # Limita o uso a 75% de um núcleo de CPU
+          memory: 768M  # Limita o uso de memória a 768MB
+
+    # Configura a verificação de saúde da aplicação
+    healthcheck:
+      # Comando que o Docker executará para verificar a saúde
+      test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
+      interval: 30s       # Intervalo entre as verificações
+      timeout: 10s        # Tempo máximo para a verificação responder
+      retries: 3          # Número de tentativas antes de marcar como "unhealthy"
+      start_period: 60s   # Período de carência no início para a aplicação subir (essencial para Java)

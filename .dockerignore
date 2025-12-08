@@ -1,0 +1,33 @@
+# Ignora a pasta de saída do Maven, pois ela será gerada dentro do container
+target/
+
+# Ignora a pasta de logs
+logs/
+
+# Ignora o histórico e os metadados do Git
+.git
+.gitignore
+
+# Ignora arquivos de configuração de ambiente local
+.env
+application-dev.yaml
+application-local.yaml
+
+# Ignora o Dockerfile e o .dockerignore, pois eles são usados pelo cliente Docker, não pelo daemon
+Dockerfile
+.dockerignore
+
+# Ignora arquivos de IDE
+.idea/
+.vscode/
+*.iml
+*.iws
+*.ipr
+
+# Ignora arquivos de sistema operacional
+.DS_Store
+Thumbs.db
+
+# Ignora arquivos de documentação que não são necessários para o build
+README.md
+HELP.md

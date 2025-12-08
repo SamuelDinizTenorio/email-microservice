@@ -10,6 +10,7 @@ Este é um microserviço de exemplo construído com Spring Boot, projetado para 
 - Logging estruturado em todas as camadas da aplicação.
 - Configuração para arquivamento de logs (rolling file).
 - Arquitetura desacoplada, permitindo a fácil substituição do provedor de e-mail.
+- Containerização com Docker e orquestração com Docker Compose.
 
 ## Arquitetura
 
@@ -27,34 +28,20 @@ O projeto é estruturado seguindo os princípios da Arquitetura Limpa/Hexagonal,
 - **Java 21**
 - **Spring Boot 3**
 - **Maven**
+- **Docker & Docker Compose**
 - **Amazon Web Services (AWS) SES**: Provedor de envio de e-mails.
 - **Lombok**: Para reduzir código boilerplate.
 - **JUnit 5 & Mockito**: Para testes de unidade e integração.
 
 ## Pré-requisitos
 
-- **Java 21** ou superior.
-- **Maven 3.8** ou superior.
+- **Docker** e **Docker Compose** instalados.
 - Uma conta na **AWS** com acesso ao **SES**.
 - **AWS SES em modo Produção** (ou com os e-mails de teste devidamente verificados no modo Sandbox).
 
-## Configuração
+## Como Executar (Recomendado)
 
-Para rodar a aplicação, você precisa configurar as seguintes variáveis de ambiente. Você pode criar um arquivo `.env` na raiz do projeto ou configurar as variáveis diretamente no seu sistema.
-
-```bash
-# Credenciais da AWS
-AWS_ACCESS_KEY_ID=SUA_ACCESS_KEY
-AWS_SECRET_ACCESS_KEY=SUA_SECRET_KEY
-AWS_REGION=sua-regiao-da-aws # ex: us-east-1
-
-# E-mail de remetente verificado no AWS SES
-EMAIL_USERNAME=seu-email-verificado@exemplo.com
-```
-
-O arquivo `application.yaml` já está configurado para ler essas variáveis.
-
-## Como Executar
+A forma mais simples e recomendada de executar a aplicação é utilizando Docker Compose.
 
 1. **Clone o repositório:**
    ```sh
@@ -62,16 +49,46 @@ O arquivo `application.yaml` já está configurado para ler essas variáveis.
    cd email-service
    ```
 
-2. **Compile o projeto com Maven:**
+2. **Crie o arquivo de ambiente:**
+   Copie o arquivo de exemplo `.env.example` para um novo arquivo chamado `.env` e preencha com suas credenciais. O arquivo `.env` é ignorado pelo Git para manter seus segredos seguros.
    ```sh
-   mvn clean install
+   cp .env.example .env
    ```
+   Agora, edite o arquivo `.env` com seus valores.
+
+3. **Suba o serviço com Docker Compose:**
+   Este comando irá construir a imagem Docker e iniciar o container em modo "detached" (em segundo plano).
+   ```sh
+   docker-compose up --build -d
+   ```
+   A aplicação estará disponível em `http://localhost:8080`.
+
+4. **Visualizando os Logs:**
+   Para ver os logs da aplicação em tempo real, use o comando:
+   ```sh
+   docker-compose logs -f
+   ```
+
+5. **Parando o Serviço:**
+   Para parar e remover os containers, use o comando:
+   ```sh
+   docker-compose down
+   ```
+
+## Como Executar (Alternativa sem Docker)
+
+Se preferir, você pode executar a aplicação diretamente com Maven.
+
+1. **Instale as dependências:**
+   - Java 21 ou superior.
+   - Maven 3.8 ou superior.
+
+2. **Exporte as variáveis de ambiente** no seu terminal ou configure-as na sua IDE.
 
 3. **Execute a aplicação:**
    ```sh
    mvn spring-boot:run
    ```
-A aplicação estará disponível em `http://localhost:8080`.
 
 ## Documentação da API
 
@@ -129,4 +146,16 @@ Para rodar todos os testes de unidade e integração, execute o seguinte comando
 
 ```sh
 mvn test
+```
+Um relatório de cobertura de testes pode ser gerado com o plugin JaCoCo (não configurado por padrão).
+
+---
+
+## Troubleshooting
+
+### `UnknownHostException: ...amazonaws.com`
+
+**Sintoma:** Ao tentar enviar um e-mail, a aplicação lança um erro `java.net.UnknownHostException`, indicando que não conseguiu encontrar o endereço do servidor da AWS. Isso geralmente acontece quando o container Docker perde a configuração de DNS da máquina hospedeira.
+
+**Solução:** A solução mais simples é **reiniciar o Docker Desktop**. Isso força a reconfiguração das redes do Docker e geralmente resolve o problema.
 ```

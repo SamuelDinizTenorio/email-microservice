@@ -39,7 +39,7 @@ class EmailSenderControllerTest {
         EmailRequestDTO request = new EmailRequestDTO("test@example.com", "Test Subject", "Test Body");
 
         // Act & Assert
-        mockMvc.perform(post("/api/email")
+        mockMvc.perform(post("/api/email/send")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isOk())
@@ -53,7 +53,7 @@ class EmailSenderControllerTest {
         EmailRequestDTO request = new EmailRequestDTO("invalid-email", "Test Subject", "Test Body");
 
         // Act & Assert
-        mockMvc.perform(post("/api/email")
+        mockMvc.perform(post("/api/email/send")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isBadRequest())
@@ -69,7 +69,7 @@ class EmailSenderControllerTest {
         EmailRequestDTO request = new EmailRequestDTO("test@example.com", "", "Test Body");
 
         // Act & Assert
-        mockMvc.perform(post("/api/email")
+        mockMvc.perform(post("/api/email/send")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isBadRequest())
@@ -85,7 +85,7 @@ class EmailSenderControllerTest {
         EmailRequestDTO request = new EmailRequestDTO("test@example.com", "Test Subject", "");
 
         // Act & Assert
-        mockMvc.perform(post("/api/email")
+        mockMvc.perform(post("/api/email/send")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isBadRequest())
@@ -100,7 +100,7 @@ class EmailSenderControllerTest {
         // Arrange - No specific request DTO needed, just an empty JSON
 
         // Act & Assert
-        mockMvc.perform(post("/api/email")
+        mockMvc.perform(post("/api/email/send")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{}"))
                 .andExpect(status().isBadRequest())
@@ -116,7 +116,7 @@ class EmailSenderControllerTest {
         // Arrange - Malformed JSON content
 
         // Act & Assert
-        mockMvc.perform(post("/api/email")
+        mockMvc.perform(post("/api/email/send")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"to\": \"test@example.com\", \"subject\":}"))
                 .andExpect(status().isBadRequest())
@@ -136,7 +136,7 @@ class EmailSenderControllerTest {
                 .when(emailSenderUseCase).sendEmail(request.to(), request.subject(), request.body());
 
         // Act & Assert
-        mockMvc.perform(post("/api/email")
+        mockMvc.perform(post("/api/email/send")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isInternalServerError())

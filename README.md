@@ -74,7 +74,7 @@ A forma mais simples e recomendada de executar a aplicação é utilizando Docke
    ```sh
    docker-compose up --build -d
    ```
-   A aplicação estará disponível em `http://localhost:8080`.
+   A aplicação estará disponível em `http://localhost:8081`.
 
 4. **Visualizando os Logs:**
    Para ver os logs da aplicação em tempo real, use o comando:
@@ -109,7 +109,7 @@ Se preferir, você pode executar a aplicação diretamente com Maven.
 
 Envia um e-mail para o destinatário especificado.
 
-- **URL**: `/api/email`
+- **URL**: `/api/email/send`
 - **Método**: `POST`
 - **Content-Type**: `application/json`
 
@@ -171,4 +171,3 @@ Um relatório de cobertura de testes pode ser gerado com o plugin JaCoCo (não c
 **Sintoma:** Ao tentar enviar um e-mail, a aplicação lança um erro `java.net.UnknownHostException`, indicando que não conseguiu encontrar o endereço do servidor da AWS. Isso geralmente acontece quando o container Docker perde a configuração de DNS da máquina hospedeira.
 
 **Solução:** A solução mais simples é **reiniciar o Docker Desktop**. Isso força a reconfiguração das redes do Docker e geralmente resolve o problema.
-```

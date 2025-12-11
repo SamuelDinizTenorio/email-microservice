@@ -6,7 +6,7 @@ services:
     image: email-service:latest
     container_name: email-service-app
     ports:
-      - "8080:8080"
+      - "8081:8081"
     
     # Carrega as variáveis de ambiente de um arquivo .env no mesmo diretorio
     env_file:
@@ -22,7 +22,7 @@ services:
     # Configura a verificação de saúde da aplicação
     healthcheck:
       # Comando que o Docker executará para verificar a saúde
-      test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
+      test: ["CMD", "curl", "-f", "http://localhost:8081/actuator/health"]
       interval: 30s       # Intervalo entre as verificações
       timeout: 10s        # Tempo máximo para a verificação responder
       retries: 3          # Número de tentativas antes de marcar como "unhealthy"

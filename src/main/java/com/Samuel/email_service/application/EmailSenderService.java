@@ -2,6 +2,7 @@ package com.Samuel.email_service.application;
 
 import com.Samuel.email_service.adapters.EmailSenderGateway;
 import com.Samuel.email_service.core.EmailSenderUseCase;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -12,18 +13,10 @@ import org.springframework.stereotype.Service;
  */
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class EmailSenderService implements EmailSenderUseCase {
 
     private final EmailSenderGateway emailSenderGateway;
-
-    /**
-     * Construtor que injeta a implementação do gateway de envio de e-mail.
-     *
-     * @param emailSenderGateway A implementação concreta do gateway (ex: AwsSesEmailSender) fornecida pelo Spring.
-     */
-    public EmailSenderService(EmailSenderGateway emailSenderGateway) {
-        this.emailSenderGateway = emailSenderGateway;
-    }
 
     /**
      * Executa a ação de enviar um e-mail, delegando a tarefa para o gateway de e-mail.

@@ -1,5 +1,6 @@
-package com.Samuel.email_service.infra.ses;
+package com.Samuel.email_service.infra.config;
 
+import com.Samuel.email_service.infra.ses.AwsSesEmailSender;
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;

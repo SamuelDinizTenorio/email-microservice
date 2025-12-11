@@ -17,8 +17,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class AwsSesEmailSender implements EmailSenderGateway {
 
-    private final String mail;
     private final AmazonSimpleEmailService amazonSimpleEmailService;
+    private final String mail;
 
     /**
      * Construtor para injeção de dependências.

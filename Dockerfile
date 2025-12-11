@@ -43,7 +43,7 @@ ARG JAR_FILE=target/*.jar
 COPY --from=build /app/${JAR_FILE} app.jar
 
 # Expõe a porta em que a aplicação Spring Boot roda.
-EXPOSE 8080
+EXPOSE 8081
 
 # Comando para executar a aplicação quando o container iniciar.
 ENTRYPOINT ["java", "-jar", "app.jar"]

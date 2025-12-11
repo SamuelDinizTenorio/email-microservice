@@ -9,6 +9,7 @@ spring:
 
 # Configurações do servidor web embutido (Tomcat)
 server:
+  port: 8081
   # Configurações de como os erros são exibidos nas respostas HTTP
   error:
     # Não inclui o nome da classe da exceção na resposta de erro.

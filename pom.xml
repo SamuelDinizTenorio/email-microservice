@@ -9,7 +9,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.Samuel</groupId>
-	<artifactId>email-service</artifactId>
+	<artifactId>email-microservice</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>email-service</name>
 	<description>Uber Code Challege</description>

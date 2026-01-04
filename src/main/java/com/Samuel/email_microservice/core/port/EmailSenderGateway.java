@@ -1,4 +1,4 @@
-package com.Samuel.email_service.core.port;
+package com.Samuel.email_microservice.core.port;
 
 /**
  * Interface que define o contrato para o serviço de envio de e-mails.
@@ -13,7 +13,7 @@ public interface EmailSenderGateway {
      * @param to      O endereço de e-mail do destinatário.
      * @param subject O assunto do e-mail.
      * @param body    O corpo do e-mail.
-     * @throws com.Samuel.email_service.core.exception.EmailServiceException se ocorrer um erro durante o envio.
+     * @throws com.Samuel.email_microservice.core.exception.EmailServiceException se ocorrer um erro durante o envio.
      */
     void sendEmail(String to, String subject, String body);
 }

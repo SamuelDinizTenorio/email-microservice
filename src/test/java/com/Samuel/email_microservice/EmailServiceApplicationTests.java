@@ -1,4 +1,4 @@
-package com.Samuel.email_service;
+package com.Samuel.email_microservice;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

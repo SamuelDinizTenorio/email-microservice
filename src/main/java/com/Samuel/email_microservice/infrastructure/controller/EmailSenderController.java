@@ -1,7 +1,7 @@
-package com.Samuel.email_service.infrastructure.controller;
+package com.Samuel.email_microservice.infrastructure.controller;
 
-import com.Samuel.email_service.core.usecase.EmailSenderUseCase;
-import com.Samuel.email_service.infrastructure.dto.EmailRequestDTO;
+import com.Samuel.email_microservice.core.usecase.EmailSenderUseCase;
+import com.Samuel.email_microservice.infrastructure.dto.EmailRequestDTO;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

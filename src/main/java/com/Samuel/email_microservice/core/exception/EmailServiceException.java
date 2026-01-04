@@ -1,4 +1,4 @@
-package com.Samuel.email_service.core.exception;
+package com.Samuel.email_microservice.core.exception;
 
 /**
  * Exceção customizada para representar erros que ocorrem dentro do serviço de e-mail.

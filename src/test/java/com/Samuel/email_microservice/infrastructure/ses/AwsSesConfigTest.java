@@ -1,6 +1,5 @@
-package com.Samuel.email_service.infrastructure.ses;
+package com.Samuel.email_microservice.infrastructure.ses;
 
-import com.Samuel.email_service.infrastructure.config.AwsSesConfig;
 import com.amazonaws.services.simpleemail.AmazonSimpleEmailService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

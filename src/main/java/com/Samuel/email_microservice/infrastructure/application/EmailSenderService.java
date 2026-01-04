@@ -1,7 +1,7 @@
-package com.Samuel.email_service.infrastructure.application;
+package com.Samuel.email_microservice.infrastructure.application;
 
-import com.Samuel.email_service.core.port.EmailSenderGateway;
-import com.Samuel.email_service.core.usecase.EmailSenderUseCase;
+import com.Samuel.email_microservice.core.port.EmailSenderGateway;
+import com.Samuel.email_microservice.core.usecase.EmailSenderUseCase;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

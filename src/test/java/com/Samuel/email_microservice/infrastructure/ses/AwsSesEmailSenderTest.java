@@ -1,7 +1,7 @@
-package com.Samuel.email_service.infrastructure.ses;
+package com.Samuel.email_microservice.infrastructure.ses;
 
-import com.Samuel.email_service.core.port.EmailSenderGateway;
-import com.Samuel.email_service.core.exception.EmailServiceException;
+import com.Samuel.email_microservice.core.port.EmailSenderGateway;
+import com.Samuel.email_microservice.core.exception.EmailServiceException;
 import com.amazonaws.AmazonServiceException;
 import com.amazonaws.services.simpleemail.AmazonSimpleEmailService;
 import com.amazonaws.services.simpleemail.model.SendEmailRequest;

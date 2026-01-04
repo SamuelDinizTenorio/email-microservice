@@ -1,15 +1,21 @@
 # Configurações gerais da aplicação Spring Boot
 spring:
   application:
-    name: email-service
-  # Configuração do e-mail de origem (remetente)
+    name: email-microservice
+  # Configuração do e-mail de origem (remetente).
   # Utilizado para identificar o remetente no serviço de e-mail.
   mail:
     username: ${EMAIL_USERNAME}
+  # Configuração necessária para lançar NoHandlerFoundException
+  mvc:
+    throw-exception-if-no-handler-found: true
+  web:
+    resources:
+      add-mappings: false
 
 # Configurações do servidor web embutido (Tomcat)
 server:
-  port: 8081
+  port: ${SERVER_PORT:8081}
   # Configurações de como os erros são exibidos nas respostas HTTP
   error:
     # Não inclui o nome da classe da exceção na resposta de erro.
@@ -22,6 +28,14 @@ server:
 
 # Configurações de logging
 logging:
+  level:
+    root: INFO
+    com.Samuel.email_microservice: DEBUG
+    org.springframework.web: INFO
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql: TRACE
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%15.15t] %-5level %-40.40logger{39} : %m%n"
   file:
     # Caminho e nome do arquivo de log. Será criado na pasta 'logs' na raiz do projeto.
     name: ./logs/email-service.log

@@ -1,12 +1,12 @@
 services:
-  email-service:
+  email-microservice:
     build:
       context: .
       dockerfile: Dockerfile
-    image: email-service:latest
-    container_name: email-service-app
+    image: email-microservice:latest
+    container_name: email-microservice-app
     ports:
-      - "8081:8081"
+      - "${SERVER_PORT}:${SERVER_PORT}" # Mapeia a porta do host para a porta do container
     
     # Carrega as variáveis de ambiente de um arquivo .env no mesmo diretorio
     env_file:
@@ -18,12 +18,30 @@ services:
         limits:
           cpus: '0.75'  # Limita o uso a 75% de um núcleo de CPU
           memory: 768M  # Limita o uso de memória a 768MB
+        reservations:
+          cpus: '0.25'  # Garante no mínimo 25% de um núcleo de CPU
+          memory: 384M  # Garante no mínimo 384MB de memória
 
     # Configura a verificação de saúde da aplicação
     healthcheck:
       # Comando que o Docker executará para verificar a saúde
-      test: ["CMD", "curl", "-f", "http://localhost:8081/actuator/health"]
+      test: ["CMD", "curl", "-f", "http://localhost:${SERVER_PORT}/actuator/health"]
       interval: 30s       # Intervalo entre as verificações
       timeout: 10s        # Tempo máximo para a verificação responder
       retries: 3          # Número de tentativas antes de marcar como "unhealthy"
       start_period: 60s   # Período de carência no início para a aplicação subir (essencial para Java)
+
+    # Garante que o serviço será reiniciado automaticamente em caso de falha
+    restart: always
+
+    # Define a rede em que o serviço irá operar
+    networks:
+      - email-network
+
+# Define as redes que serão criadas e utilizadas pelos serviços
+networks:
+  email-network:
+    driver: bridge # Tipo de rede, 'bridge' é o padrão e mais comum
+    # Você pode adicionar opções de rede aqui, se necessário
+    # Por exemplo, para definir um nome específico para a rede externa:
+    # name: my-custom-email-network

@@ -4,8 +4,7 @@ import com.amazonaws.services.simpleemail.AmazonSimpleEmailService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @DisplayName("AWS SES Config Tests")
 class AwsSesConfigTest {
@@ -21,26 +20,26 @@ class AwsSesConfigTest {
         // Arrange - Valores de configuração simulados já definidos como campos da classe.
 
         // Act
-        AwsSesConfig config = new AwsSesConfig(accessKey, secretKey, region);
+        var config = new AwsSesConfig(accessKey, secretKey, region);
 
         // Assert
-        assertNotNull(config, "AwsSesConfig should not be null");
-        // Não podemos verificar diretamente os campos privados (accessKey, secretKey, region)
-        // sem getters ou reflexão, mas a criação bem-sucedida do objeto já indica que o construtor funcionou.
+        assertThat(config)
+                .as("AwsSesConfig instance should not be null")
+                .isNotNull();
     }
 
     @Test
     @DisplayName("Should create AmazonSimpleEmailService bean successfully")
     void amazonSimpleEmailService_shouldCreateBean() {
         // Arrange
-        AwsSesConfig config = new AwsSesConfig(accessKey, secretKey, region);
+        var config = new AwsSesConfig(accessKey, secretKey, region);
 
         // Act
         AmazonSimpleEmailService sesClient = config.amazonSimpleEmailService();
 
         // Assert
-        assertNotNull(sesClient, "AmazonSimpleEmailService bean should not be null");
-        // A inspeção mais profunda da configuração do cliente é complexa em um teste de unidade puro.
-        // Este teste garante que o processo de criação do bean não falha imediatamente.
+        assertThat(sesClient)
+                .as("AmazonSimpleEmailService bean should not be null")
+                .isNotNull();
     }
 }

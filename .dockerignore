@@ -1,33 +1,41 @@
-# Ignora a pasta de saída do Maven, pois ela será gerada dentro do container
+# Arquivos e diretórios gerados pelo Maven
 target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
 
-# Ignora a pasta de logs
-logs/
-
-# Ignora o histórico e os metadados do Git
-.git
+# Arquivos e diretórios do Git
+.git/
 .gitignore
+.github/
 
-# Ignora arquivos de configuração de ambiente local
-.env
-application-dev.yaml
-application-local.yaml
-
-# Ignora o Dockerfile e o .dockerignore, pois eles são usados pelo cliente Docker, não pelo daemon
-Dockerfile
-.dockerignore
-
-# Ignora arquivos de IDE
+# Arquivos de configuração da IDE
 .idea/
 .vscode/
 *.iml
-*.iws
 *.ipr
+*.iws
+.project
+.classpath
+.settings/
 
-# Ignora arquivos de sistema operacional
+# Arquivos de log
+*.log
+logs/
+
+# Arquivos do sistema operacional
 .DS_Store
 Thumbs.db
 
-# Ignora arquivos de documentação que não são necessários para o build
+# Arquivos de ambiente local (nunca devem ir para a imagem)
+.env
+
+# Arquivos de documentação e outros
 README.md
-HELP.md
+
+# Arquivos do Docker
+Dockerfile
+docker-compose.yml
+.dockerignore

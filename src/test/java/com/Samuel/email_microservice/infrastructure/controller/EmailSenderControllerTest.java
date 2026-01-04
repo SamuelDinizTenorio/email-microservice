@@ -15,6 +15,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.mockito.Mockito.doThrow;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -58,7 +59,10 @@ class EmailSenderControllerTest {
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.status").value(400))
-                .andExpect(jsonPath("$.message", containsString("Invalid email format")))
+                .andExpect(jsonPath("$.error").value("Bad Request"))
+                .andExpect(jsonPath("$.message").value("Validation failed"))
+                .andExpect(jsonPath("$.path").value("/api/email/send"))
+                .andExpect(jsonPath("$.errors.to").value("Invalid email format"))
                 .andExpect(jsonPath("$.timestamp", notNullValue()));
     }
 
@@ -74,7 +78,10 @@ class EmailSenderControllerTest {
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.status").value(400))
-                .andExpect(jsonPath("$.message", containsString("Subject cannot be blank")))
+                .andExpect(jsonPath("$.error").value("Bad Request"))
+                .andExpect(jsonPath("$.message").value("Validation failed"))
+                .andExpect(jsonPath("$.path").value("/api/email/send"))
+                .andExpect(jsonPath("$.errors.subject").value("Subject cannot be blank"))
                 .andExpect(jsonPath("$.timestamp", notNullValue()));
     }
 
@@ -90,7 +97,10 @@ class EmailSenderControllerTest {
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.status").value(400))
-                .andExpect(jsonPath("$.message", containsString("Body cannot be blank")))
+                .andExpect(jsonPath("$.error").value("Bad Request"))
+                .andExpect(jsonPath("$.message").value("Validation failed"))
+                .andExpect(jsonPath("$.path").value("/api/email/send"))
+                .andExpect(jsonPath("$.errors.body").value("Body cannot be blank"))
                 .andExpect(jsonPath("$.timestamp", notNullValue()));
     }
 
@@ -105,9 +115,13 @@ class EmailSenderControllerTest {
                         .content("{}"))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.status").value(400))
-                .andExpect(jsonPath("$.message", containsString("Recipient email cannot be blank")))
-                .andExpect(jsonPath("$.message", containsString("Subject cannot be blank")))
-                .andExpect(jsonPath("$.message", containsString("Body cannot be blank")));
+                .andExpect(jsonPath("$.error").value("Bad Request"))
+                .andExpect(jsonPath("$.message").value("Validation failed"))
+                .andExpect(jsonPath("$.path").value("/api/email/send"))
+                .andExpect(jsonPath("$.errors.to").value("Recipient email cannot be blank"))
+                .andExpect(jsonPath("$.errors.subject").value("Subject cannot be blank"))
+                .andExpect(jsonPath("$.errors.body").value("Body cannot be blank"))
+                .andExpect(jsonPath("$.timestamp", notNullValue()));
     }
 
     @Test
@@ -121,7 +135,9 @@ class EmailSenderControllerTest {
                         .content("{\"to\": \"test@example.com\", \"subject\":}"))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.status").value(400))
+                .andExpect(jsonPath("$.error").value("Bad Request"))
                 .andExpect(jsonPath("$.message", containsString("Malformed JSON in request body")))
+                .andExpect(jsonPath("$.path").value("/api/email/send"))
                 .andExpect(jsonPath("$.timestamp", notNullValue()));
     }
 
@@ -141,7 +157,40 @@ class EmailSenderControllerTest {
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isInternalServerError())
                 .andExpect(jsonPath("$.status").value(500))
+                .andExpect(jsonPath("$.error").value("Internal Server Error"))
                 .andExpect(jsonPath("$.message").value("Failed to connect to email provider"))
+                .andExpect(jsonPath("$.path").value("/api/email/send"))
+                .andExpect(jsonPath("$.timestamp", notNullValue()));
+    }
+
+    @Test
+    @DisplayName("Should return HTTP 405 Method Not Allowed when using GET instead of POST")
+    void sendEmail_withWrongHttpMethod_shouldReturnMethodNotAllowed() throws Exception {
+        // Act & Assert
+        mockMvc.perform(get("/api/email/send"))
+                .andExpect(status().isMethodNotAllowed())
+                .andExpect(jsonPath("$.status").value(405))
+                .andExpect(jsonPath("$.error").value("Method Not Allowed"))
+                .andExpect(jsonPath("$.message", containsString("Method Not Allowed")))
+                .andExpect(jsonPath("$.path").value("/api/email/send"))
+                .andExpect(jsonPath("$.timestamp", notNullValue()));
+    }
+
+    @Test
+    @DisplayName("Should return HTTP 415 Unsupported Media Type when Content-Type is not JSON")
+    void sendEmail_withWrongContentType_shouldReturnUnsupportedMediaType() throws Exception {
+        // Arrange
+        String xmlContent = "<request><to>test@example.com</to></request>";
+
+        // Act & Assert
+        mockMvc.perform(post("/api/email/send")
+                        .contentType(MediaType.APPLICATION_XML)
+                        .content(xmlContent))
+                .andExpect(status().isUnsupportedMediaType())
+                .andExpect(jsonPath("$.status").value(415))
+                .andExpect(jsonPath("$.error").value("Unsupported Media Type"))
+                .andExpect(jsonPath("$.message", containsString("Unsupported Media Type")))
+                .andExpect(jsonPath("$.path").value("/api/email/send"))
                 .andExpect(jsonPath("$.timestamp", notNullValue()));
     }
 }

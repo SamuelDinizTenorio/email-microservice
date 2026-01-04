@@ -13,8 +13,8 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -53,13 +53,15 @@ class AwsSesEmailSenderTest {
 
         SendEmailRequest capturedRequest = requestCaptor.getValue();
 
-        // Verifica os detalhes da requisição capturada
-        assertEquals(fromEmail, capturedRequest.getSource());
-        assertEquals(to, capturedRequest.getDestination().getToAddresses().get(0));
-        assertEquals(subject, capturedRequest.getMessage().getSubject().getData());
-        assertEquals(body, capturedRequest.getMessage().getBody().getText().getData());
-        assertEquals("UTF-8", capturedRequest.getMessage().getSubject().getCharset());
-        assertEquals("UTF-8", capturedRequest.getMessage().getBody().getText().getCharset());
+        // Verifica os detalhes da requisição capturada usando AssertJ e satisfies
+        assertThat(capturedRequest).satisfies(req -> {
+            assertThat(req.getSource()).isEqualTo(fromEmail);
+            assertThat(req.getDestination().getToAddresses()).containsExactly(to);
+            assertThat(req.getMessage().getSubject().getData()).isEqualTo(subject);
+            assertThat(req.getMessage().getSubject().getCharset()).isEqualTo("UTF-8");
+            assertThat(req.getMessage().getBody().getText().getData()).isEqualTo(body);
+            assertThat(req.getMessage().getBody().getText().getCharset()).isEqualTo("UTF-8");
+        });
     }
 
     @Test
@@ -76,14 +78,11 @@ class AwsSesEmailSenderTest {
         doThrow(amazonException).when(amazonSimpleEmailService).sendEmail(any(SendEmailRequest.class));
 
         // Act & Assert
-        // Verifica se EmailServiceException é lançada
-        EmailServiceException thrown = assertThrows(EmailServiceException.class, () -> {
-            awsSesEmailSender.sendEmail(to, subject, body);
-        });
-
-        // Opcional: verificar a mensagem da exceção e a causa
-        assertEquals("Failure while sending email", thrown.getMessage());
-        assertEquals(amazonException, thrown.getCause());
+        // Verifica se EmailServiceException é lançada usando AssertJ
+        assertThatThrownBy(() -> awsSesEmailSender.sendEmail(to, subject, body))
+                .isInstanceOf(EmailServiceException.class)
+                .hasMessage("Failure while sending email")
+                .hasCause(amazonException);
 
         // Verifica se o método sendEmail do cliente AWS foi chamado
         verify(amazonSimpleEmailService, times(1)).sendEmail(any(SendEmailRequest.class));

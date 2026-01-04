@@ -2,7 +2,6 @@ package com.Samuel.email_microservice.infrastructure.application;
 
 import com.Samuel.email_microservice.core.port.EmailSenderGateway;
 import com.Samuel.email_microservice.core.exception.EmailServiceException;
-import com.Samuel.email_microservice.infrastructure.application.EmailSenderService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -10,7 +9,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -42,18 +42,18 @@ class EmailSenderServiceTest {
         String to = "test@example.com";
         String subject = "Test Subject";
         String body = "Test Body";
-        EmailServiceException gatewayException = new EmailServiceException("Gateway failed to send email");
+
+        // Simula a mensagem exata que a implementação real (AwsSesEmailSender) lançaria
+        var gatewayException = new EmailServiceException("Failure while sending email");
 
         // Configura o mock para lançar uma exceção quando o método sendEmail for chamado
-        doThrow(gatewayException).when(emailSenderGateway).sendEmail(to, subject, body);
+        doThrow(gatewayException)
+                .when(emailSenderGateway).sendEmail(to, subject, body);
 
-        // Verifica se o serviço lança a mesma exceção
-        EmailServiceException thrown = assertThrows(EmailServiceException.class, () -> {
-            emailSenderService.sendEmail(to, subject, body);
-        });
-
-        // Opcional: verificar se a mensagem da exceção é a esperada
-        // assertEquals("Gateway failed to send email", thrown.getMessage());
+        // Verifica se o serviço lança a mesma exceção usando AssertJ
+        assertThatThrownBy(() -> emailSenderService.sendEmail(to, subject, body))
+                .isInstanceOf(gatewayException.getClass())
+                .hasMessage(gatewayException.getMessage());
 
         // Verifica se o método sendEmail do gateway foi chamado
         verify(emailSenderGateway, times(1)).sendEmail(to, subject, body);

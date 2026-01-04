@@ -1,4 +1,4 @@
-package com.Samuel.email_service.core;
+package com.Samuel.email_service.core.usecase;
 
 /**
  * Define o caso de uso para o envio de e-mails.

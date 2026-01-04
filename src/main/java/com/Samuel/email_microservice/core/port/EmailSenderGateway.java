@@ -1,4 +1,4 @@
-package com.Samuel.email_service.adapters;
+package com.Samuel.email_service.core.port;
 
 /**
  * Interface que define o contrato para o serviço de envio de e-mails.

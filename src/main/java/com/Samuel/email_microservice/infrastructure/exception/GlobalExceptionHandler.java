@@ -1,7 +1,7 @@
-package com.Samuel.email_service.controllers;
+package com.Samuel.email_service.infrastructure.exception;
 
 import com.Samuel.email_service.core.exception.EmailServiceException;
-import com.Samuel.email_service.dto.ErrorDTO;
+import com.Samuel.email_service.infrastructure.dto.ErrorDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

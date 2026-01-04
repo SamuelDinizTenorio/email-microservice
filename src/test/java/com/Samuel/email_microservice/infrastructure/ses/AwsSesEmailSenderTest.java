@@ -1,14 +1,10 @@
-package com.Samuel.email_service.infra.ses;
+package com.Samuel.email_service.infrastructure.ses;
 
-import com.Samuel.email_service.adapters.EmailSenderGateway;
+import com.Samuel.email_service.core.port.EmailSenderGateway;
 import com.Samuel.email_service.core.exception.EmailServiceException;
 import com.amazonaws.AmazonServiceException;
 import com.amazonaws.services.simpleemail.AmazonSimpleEmailService;
-import com.amazonaws.services.simpleemail.model.Content;
-import com.amazonaws.services.simpleemail.model.Destination;
-import com.amazonaws.services.simpleemail.model.Message;
 import com.amazonaws.services.simpleemail.model.SendEmailRequest;
-import com.amazonaws.services.simpleemail.model.Body;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

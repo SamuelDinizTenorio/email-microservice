@@ -1,8 +1,9 @@
 package com.Samuel.email_service.controllers;
 
-import com.Samuel.email_service.core.EmailSenderUseCase;
+import com.Samuel.email_service.core.usecase.EmailSenderUseCase;
 import com.Samuel.email_service.core.exception.EmailServiceException;
-import com.Samuel.email_service.dto.EmailRequestDTO;
+import com.Samuel.email_service.infrastructure.controller.EmailSenderController;
+import com.Samuel.email_service.infrastructure.dto.EmailRequestDTO;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

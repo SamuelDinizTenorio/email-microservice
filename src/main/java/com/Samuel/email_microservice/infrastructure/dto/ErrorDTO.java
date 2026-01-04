@@ -1,4 +1,4 @@
-package com.Samuel.email_service.dto;
+package com.Samuel.email_service.infrastructure.dto;
 
 import java.time.LocalDateTime;
 

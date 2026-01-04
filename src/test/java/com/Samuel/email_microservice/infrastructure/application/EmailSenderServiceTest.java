@@ -1,7 +1,8 @@
 package com.Samuel.email_service.application;
 
-import com.Samuel.email_service.adapters.EmailSenderGateway;
+import com.Samuel.email_service.core.port.EmailSenderGateway;
 import com.Samuel.email_service.core.exception.EmailServiceException;
+import com.Samuel.email_service.infrastructure.application.EmailSenderService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

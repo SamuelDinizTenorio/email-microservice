@@ -1,4 +1,4 @@
-# Email Service
+# Email Microservice
 
 [![CI - Build, Test and Security Analysis](https://github.com/SamuelDinizTenorio/EMAIL-SERVICE/actions/workflows/ci.yml/badge.svg)](https://github.com/SamuelDinizTenorio/EMAIL-SERVICE/actions/workflows/ci.yml)
 
@@ -18,12 +18,14 @@ Este é um microserviço de exemplo construído com Spring Boot, projetado para 
 
 O projeto é estruturado seguindo os princípios da Arquitetura Limpa/Hexagonal, separando as responsabilidades em diferentes camadas:
 
-- **`core`**: O coração da aplicação. Contém as interfaces dos casos de uso (as "portas de entrada", ex: `EmailSenderUseCase`).
-- **`application`**: Implementa os casos de uso definidos no `core`.
-- **`adapters`**: Define as interfaces para a comunicação com o mundo exterior (as "portas de saída", ex: `EmailSenderGateway`).
-- **`infra`**: Contém as implementações concretas (adaptadores de saída) para as portas definidas em `adapters`. Ex: `AwsSesEmailSender`.
-- **`controllers`**: Contém os adaptadores de entrada que expõem a funcionalidade da aplicação via API REST.
-- **`dto`**: Data Transfer Objects usados para a comunicação entre as camadas e na API.
+- **`core`**: O coração da aplicação. Contém as interfaces dos casos de uso (as "portas de entrada", ex: `EmailSenderUseCase`) e as exceções de domínio.
+- **`infrastructure`**: Contém toda a implementação técnica e adaptadores.
+    - **`application`**: Implementa os casos de uso definidos no `core` (ex: `EmailSenderService`).
+    - **`controller`**: Adaptadores de entrada que expõem a funcionalidade via API REST.
+    - **`ses`**: Adaptador de saída (infraestrutura) para o Amazon SES.
+    - **`config`**: Configurações do Spring e Beans.
+    - **`dto`**: Objetos de Transferência de Dados.
+    - **`exception`**: Tratamento global de exceções (`GlobalExceptionHandler`).
 
 ## CI/CD Pipeline
 
@@ -39,12 +41,12 @@ Um build bem-sucedido garante que o projeto está compilando, que os testes est�
 ## Tecnologias Utilizadas
 
 - **Java 21**
-- **Spring Boot 3**
+- **Spring Boot 3.5.8**
 - **Maven**
 - **Docker & Docker Compose**
 - **Amazon Web Services (AWS) SES**: Provedor de envio de e-mails.
 - **Lombok**: Para reduzir código boilerplate.
-- **JUnit 5 & Mockito**: Para testes de unidade e integração.
+- **JUnit 5, Mockito & AssertJ**: Para testes de unidade e integração robustos.
 
 ## Pré-requisitos
 
@@ -136,8 +138,13 @@ Se a validação falhar (ex: e-mail inválido):
 ```json
 {
   "status": 400,
-  "message": "Validation failed: {to=Invalid email format}",
-  "timestamp": "2023-10-27T15:30:00.123456"
+  "error": "Bad Request",
+  "message": "Validation failed",
+  "path": "/api/email/send",
+  "timestamp": "2023-10-27T15:30:00.123456",
+  "errors": {
+    "to": "Invalid email format"
+  }
 }
 ```
 
@@ -148,8 +155,38 @@ Se ocorrer uma falha no servidor durante o envio:
 ```json
 {
   "status": 500,
+  "error": "Internal Server Error",
   "message": "Failure while sending email",
+  "path": "/api/email/send",
   "timestamp": "2023-10-27T15:35:00.123456"
+}
+```
+
+#### Resposta de Erro (Exemplo: 405 Method Not Allowed)
+
+Se tentar usar um método HTTP incorreto (ex: GET):
+
+```json
+{
+  "status": 405,
+  "error": "Method Not Allowed",
+  "message": "Method Not Allowed. Supported methods: [POST]",
+  "path": "/api/email/send",
+  "timestamp": "2023-10-27T15:40:00.123456"
+}
+```
+
+#### Resposta de Erro (Exemplo: 415 Unsupported Media Type)
+
+Se enviar um Content-Type incorreto (ex: application/xml):
+
+```json
+{
+  "status": 415,
+  "error": "Unsupported Media Type",
+  "message": "Unsupported Media Type. Please use application/json.",
+  "path": "/api/email/send",
+  "timestamp": "2023-10-27T15:45:00.123456"
 }
 ```
 

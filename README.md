@@ -46,7 +46,8 @@ Um build bem-sucedido garante que o projeto está compilando, que os testes est�
 - **Docker & Docker Compose**
 - **Amazon Web Services (AWS) SES**: Provedor de envio de e-mails.
 - **Lombok**: Para reduzir código boilerplate.
-- **JUnit 5, Mockito & AssertJ**: Para testes de unidade e integração robustos.
+- **JUnit 5 & Mockito**: Para a estrutura de testes de unidade e integração robustos.
+- **AssertJ**: Para asserções fluentes e legíveis nos testes.
 
 ## Pré-requisitos
 

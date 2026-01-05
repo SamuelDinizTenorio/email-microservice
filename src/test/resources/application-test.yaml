@@ -1,0 +1,35 @@
+# Configurações específicas para o ambiente de TESTE
+
+spring:
+  application:
+    name: email-service-test
+  
+  # Configurações de e-mail falsas para evitar erros de inicialização
+  mail:
+    username: test-sender@example.com
+
+  # Garante que o comportamento de 404 seja testável
+  mvc:
+    throw-exception-if-no-handler-found: true
+  web:
+    resources:
+      add-mappings: false
+
+server:
+  # Usa uma porta aleatória para evitar conflitos de porta durante os testes paralelos
+  port: 0
+
+# Configurações de logging para testes (menos verboso)
+logging:
+  level:
+    root: INFO
+    com.Samuel.email_microservice: DEBUG
+    # Silencia logs do Spring/Hibernate para focar nos erros do teste
+    org.springframework: WARN
+    org.hibernate: WARN
+
+# Credenciais AWS FALSAS para garantir que NUNCA conecte na AWS real durante testes
+aws:
+  accessKeyId: test-access-key
+  secretKey: test-secret-key
+  region: us-east-1
